@@ -5,6 +5,8 @@
 *.log
 *.out
 *.synctex.gz
+analyses/offtargets/scripts/cds.R
 
 /Users/fortinj2/crisprDesignPaper/analyses/casrx/konermann
+analyses/offtargets/objects/backup
 
