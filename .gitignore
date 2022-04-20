@@ -11,3 +11,4 @@ analyses/offtargets/scripts/cds.R
 analyses/casrx/konermann
 analyses/offtargets/objects/backup
 analyses/casrx/sanjana/data/transcript_rna_celline.tsv
+internalReview/*
