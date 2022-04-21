@@ -384,21 +384,16 @@ Optical pooled screening (OPS) is a promising novel screening modality that comb
 % CRISPRbe
 \subsection{Designing gRNAs targeting \textit{BRCA1} for the base editor BE4max} 
 
+CRISPR base editors are deaminases fused to CRISPR nickases to introduce mutations at loci targeted by the gRNAs without introducing double-stranded breaks (DSBs) \cite{gaudelli,komor}. A recent study characterizing eight popular base editors showed high heterogeneity and complexity of the editing outcomes across base editors, motivating the need of robust but flexible software to design gRNAs for base editing applications \citep{behive}. In particular, this includes functionalities for listing and characterizing potential edited alleles introduced by gRNAs to inform the phenotypic readouts created by those gRNAs.
 
-
-
-CRISPR base editors are deaminases fused to CRISPR nickases to introduce mutations at loci targeted by the gRNAs without introducing double-stranded breaks (DSBs) \cite{gaudelli,komor}. A recent study characterizing eight popular base editors showed high heterogeneity and complexity of the editing outcomes across base editors, motivating the need of robust but flexible software to design gRNAs for base editing applications \citep{behive}. To illustrate the functionalities of our ecosystem for designing base editor gRNAs, we designed and characterized all possible gRNAs targeting the coding sequence of \textit{BRCA1} for the cytidine base editor BE4max \citep{koblan2018improving}. The design workflow is shown in Figure~\ref{fig:crisprbe}. 
+To illustrate the functionalities of our ecosystem for designing base editor gRNAs, we designed and characterized all possible gRNAs targeting the coding sequence of \textit{BRCA1} for the cytidine base editor BE4max \citep{koblan2018improving}. The design workflow is shown in Figure~\ref{fig:crisprbe}. 
 
 The first step consisted of designing all possible guides targeting \textit{BRCA1} using the \textit{findSpacers} function in \textit{crisprDesign}. The BE4max \textit{BaseEditor} object from \textit{crisprBase} was used to store nucleotide- and position-specific editing probabilities (see Figure~\ref{fig:crisprbe}a), which inform the editing window of interest for each of the gRNA targets. Next, using the function \textit{getEditedAlleles}, we generated and stored all possible editing events at each gRNA (see Figure~\ref{fig:crisprbe}b). The function also adds a score for each edited allele that quantifies the likelihood of editing to occur based on the editing probabilities stored in the \textit{BaseEditor} object (see Methods). In addition, each edited allele is annotated for its predicted functional consequence: silent, missense, or nonsense mutation. In case several mutations occur in a given edited allele, the most consequential mutation is used to label the allele (nonsense over missense, and missense over silent).  For each gRNA, and for each mutation type, we then generated a gRNA-level score by aggregating the likelihood scores across all possible alleles (see Methods). The score represents the likelihood of a gRNA to induce a given mutation type (see Figure~\ref{fig:crisprbe}c, left plot). 
 
-To show how our gRNA annotations can be used to analyze screening data, we obtained data from a negative selection pooled screen performed in MelJuSo using a base editing library tiling the \textit{BRCA1} gene \citep{hanna2021massively}. Given that loss-of-function mutations in \textit{BRCA1} reduce cell fitness \citep{findlay2018accurate}, gRNAs introducing nonsense mutations are expected to drop out, and can therefore serve as positive controls. We created Receiver Operating Characteristic (ROC) curves to measure how well gRNA dropout can separate positive controls from other gRNAs. We used log fold changes in gRNA abundance between the later time point and the plasmid DNA (pDNA) library as a measure of gRNA dropout (see Methods). We used several thresholds of the nonsense mutation score to label gRNAs as positive controls or not.  
-We observed that gRNA dropout in the screen can separate positive controls well from all other gRNAs, and that performance is improved when using positive controls defined by higher nonsense mutation scores (Figure~\ref{fig:crisprbe}c). 
+To show how our gRNA annotations can be used to understand the phenotypic effects observed in screening data, we obtained data from a negative selection pooled screen performed in MelJuSo using a base editing library tiling the \textit{BRCA1} gene \citep{hanna2021massively}. Given that loss-of-function mutations in \textit{BRCA1} reduce cell fitness \citep{findlay2018accurate}, gRNAs introducing nonsense mutations are expected to drop out, and can therefore serve as positive controls. We created Receiver Operating Characteristic (ROC) curves to measure how well gRNA dropout can separate positive controls from other gRNAs. We used log fold changes in gRNA abundance between the later time point and the plasmid DNA (pDNA) library as a measure of gRNA dropout (see Methods). We used several thresholds of the nonsense mutation score to label gRNAs as positive controls or not. We observed that gRNA dropout in the screen can separate positive controls well from all other gRNAs, and that performance is improved when using positive controls defined by higher nonsense mutation scores (Figure~\ref{fig:crisprbe}c). 
 
 
-Finally, we characterized gRNAs for off-targeting effects using \textit{crisprBowtie}, added sequence features using \textit{crisprDesign}, and added on-target scores using \textit{crisprScore}. We asked whether or not the magnitude of gRNA dropout in the screen associates with predicted on-target activity for the SpCas9 nuclease. In Figure~\ref{fig:crisprbe}d, we show gRNA dropout as a function of different predicted gRNA efficacy scores: Rule Set 1, Azimuth, and DeepHF. 
-gRNAs predicted to induce nonsense mutations are shown in red, and grey otherwise. Despite the fact that each algorithm was trained on data using a SpCas9 nuclease with intact endonuclease activity, gRNA dropout and predicted gRNA efficacy correlate for all methods ($r = -0.30$ for Rule Set 1, $r =  -0.20$ for Azimuth, and $r = -0.17$ for DeepHF). 
-
-
+We also characterized gRNAs for off-targeting effects using \textit{crisprBowtie}, added sequence features using \textit{crisprDesign}, and added on-target scores using \textit{crisprScore}. We asked whether or not the magnitude of gRNA dropout in the screen associates with predicted on-target activity for the SpCas9 nuclease. In Figure~\ref{fig:crisprbe}d, we show gRNA dropout as a function of different predicted gRNA efficacy scores: Rule Set 1, Azimuth, and DeepHF.  gRNAs predicted to induce nonsense mutations are shown in red, and grey otherwise. Despite the fact that each algorithm was trained on data using a SpCas9 nuclease with intact endonuclease activity, gRNA dropout and predicted gRNA efficacy correlate for all methods ($r = -0.30$ for Rule Set 1, $r =  -0.20$ for Azimuth, and $r = -0.17$ for DeepHF). Overall, the different functionalities implemented in our ecosystem provides a set of informative annotations for base editor gRNAs and facilitate the interpretation of experimental data obtained from base editor screens.
 
 
 
@@ -422,8 +417,10 @@ Two inputs are required: DNA sequences of \textit{BRCA1} exons and a
 % CasRx
 \subsection{Annotating and scoring gRNAs for gene knockdown using CasRx}
 
-Next, we describe a workflow for designing gRNAs targeting \textit{CD46} and \textit{CD55} using the RNA-targeting nuclease CasRx (RfxCas13d) \citep{cas13d} (Figure~\ref{fig:casrx}).
-To validate our design process, we obtained CasRx pooled screening data performed in HEK 293 cells with gRNA libraries tiling the human genes \textit{CD46} and \textit{CD55} from \citet{wessels2020massively}. Since both genes encode for cell-surface proteins, the authors used fluorescence-activated cell sorting (FACS) to sort cells with high and low expression. Their data can be used to investigate gRNA knockdown efficacy based on the change in relative abundance of high- and low-expressing cells for each targeted gene (see Methods). 
+One of the challenges in designing gRNAs specific to RNA-targeting nucleases is to enable on-target and off-target characterization to be performed in a transcriptome space, as opposed to a reference genome. This requires strand-specific functionalities, transcriptome-specific alignment indexes, as well as additional gene annotation functionalities to capture isoform-specific targeting.  
+
+Here, we describe a workflow for designing gRNAs targeting \textit{CD46} and \textit{CD55} using the RNA-targeting nuclease CasRx (RfxCas13d) \citep{cas13d} (Figure~\ref{fig:casrx}).
+The workflow takes into consideration the aforementioned issues. To validate our design process, we obtained CasRx pooled screening data performed in HEK 293 cells with gRNA libraries tiling the human genes \textit{CD46} and \textit{CD55} from \citet{wessels2020massively}. Since both genes encode for cell-surface proteins, the authors used fluorescence-activated cell sorting (FACS) to sort cells with high and low expression. Their data can be used to investigate gRNA knockdown efficacy based on the change in relative abundance of high- and low-expressing cells for each targeted gene (see Methods). 
 
 We first extracted mRNA sequences of both genes using the function \textit{getMrnaSequence} from \textit{crisprDesign}. 
 The mRNA sequences, together with the \textit{CrisprNuclease} object CasRx from \textit{crisprBase}, served as inputs to create a \textit{Guideset}.
@@ -433,6 +430,9 @@ We performed an off-target search using \textit{crisprBowtie} to the human trans
 We extended the CFD off-target scoring algorithm implemented in \textit{crisprScore} to work with CasRx by estimating mismatch tolerance weights on the GFP tiling screen data from \citet{wessels2020massively} (see Methods). The off-target CFD-CasRx score performs well at predicting gRNA activity of single-mismatch and double-mismatch gRNAs in the \textit{CD55} screen (Figure~\ref{fig:casrx}c, and see Methods).  
 
 Finally, we added sequence features, and ranked gRNAs for targeting \textit{CD55} and \textit{CD46} based on (1) high on-target score, (2) low number of off-targets, and (3) high number of targeted isoforms. If we select gRNAs that target a common exon and that have high on-target score, we enrich for highly active gRNAs in the screening data (Figure~\ref{fig:casrx}d). 
+
+
+
 
 
 %%% Figure CRISPR-CasRx
@@ -446,7 +446,7 @@ Two inputs are required: mRNA sequences of \textit{CD55} and \textit{CD46} and a
 \textbf{a} Relationship between on-target CasRx-RF score calculated in \textit{crisprScore} and log-fold changes from the pooled FACS tiling CasRx screening data (see Methods). A higher log-fold change indicates higher gRNA activity.
 \textbf{b} Relationship between log-fold changes from the CasRx screening data and gRNA context for \textit{CD46} and \textit{CD55}: gRNAs targeting 5$^\prime$ UTR and 3$^\prime$ UTR for the canonical transcript, and guides targeting a low and high number of isoforms for each of the genes. gRNAs targeting more isoforms show higher enrichment in the screening data. The full isoform annotation is stored in the \textit{GuideSet} objects.
 \textbf{c} Left: relationship between observed log-fold changes of on-target gRNAs in the \textit{CD55} screen and predicted log-fold changes of single-mismatch gRNAs using the off-target CFD-CasRx score implemented in \textit{crisprScore} (see Methods). Right: same as left, but for double-mismatch gRNAs.
-\textbf{d} gRNA selecteds in the \textit{CD46} screen for high on-target activity (CasRx-RF score) and targeting a common exon across all protein-coding isoforms enrich for high gRNA activity. }
+\textbf{d} gRNAs selected in the \textit{CD46} screen for high on-target activity (CasRx-RF score) and targeting a common exon across all protein-coding isoforms enrich for high gRNA activity. }
   \label{fig:casrx}
 \end{figure}
 
@@ -458,10 +458,9 @@ Two inputs are required: mRNA sequences of \textit{CD55} and \textit{CD46} and a
 % CRISPRa
 \subsection{Designing optimal gRNAs to activate \textit{MMP7} using CRISPRa using different nucleases}
 
-%\fixme{crisprai score}
+Designing gRNAs for either CRISPRa and CRISPRi applications requires additional considerations. This includes choosing an optimal target region based on chromatin accessibility data and TSS data, and selecting gRNAs based on their positioning with respect to the TSS. 
 
-To demonstrate the utility of our framework for CRISPRa, we designed gRNAs using the human gene \textit{MMP7} as an example target (Figure~\ref{fig:crispra}). 
-One CRISPRa-specific design consideration is the limited number of candidate gRNAs available for a given gene due to the narrow window of optimal activation. 
+To demonstrate the utility of our ecosystem functionalities for CRISPRa and CRISPRi, we designed gRNAs for CRISPRa using the human gene \textit{MMP7} as an example target (Figure~\ref{fig:crispra}). CRISPRi is discussed at the end of this section. One CRISPRa-specific design consideration is the limited number of candidate gRNAs available for a given gene due to the narrow window of optimal activation. 
 Engineered nucleases with less constrained PAM sequences can improve CRISPRa applicability by expanding the set of candidate gRNAs. 
 To investigate this, we designed gRNAs for the promoter region of \textit{MMP7} using four nucleases in parallel: SpCas9, AsCas12a, and the more PAM-flexible versions SpGCas9 \citep{spg} and enAsCas12a \citep{enpamgb}. 
 
@@ -494,8 +493,7 @@ The light pink region corresponds to the optimal region of activation based on \
 
 
 % CRISPRi
-Designing gRNAs for CRISPRi applications using \textit{crisprDesign} is nearly identical, with the exception that the preferred target region for interference is located downstream of the TSS. The CRISPRai scoring algorithm from \citet{crispria}, available through \textit{crisprScore}, can be used to select optimal gRNAs for each TSS separately, taking into account both gRNA positioning and sequence content to maximize on-target inhibition. For both CRISPRa and CRISPRi, our gRNA design workflow is also applicable to non-coding regulatory elements, for instance long non-coding RNAs (lncRNAs) as it was done in \citet{liu2017crispri}.
-
+Designing gRNAs for CRISPRi applications using \textit{crisprDesign} is nearly identical, with the exception that the preferred target region for interference is located downstream of the TSS. The CRISPRai scoring algorithm from \citet{crispria}, available through \textit{crisprScore}, can be used to select optimal gRNAs for each TSS separately, taking into account both gRNA positioning and sequence content to maximize on-target inhibition. For both CRISPRa and CRISPRi, our gRNA design workflow is also applicable to non-coding regulatory elements, for instance long non-coding RNAs (lncRNAs) as it was done in \citet{liu2017crispri}. Overall, \textit{crisprDesign} provides end-to-end functionalities that are well-suited for a large array CRISPRa and CRISPRi applications.
 
 
 
@@ -754,7 +752,7 @@ All authors read and approved the final manuscript.
 % Acknowledgements:
 \section*{Acknowledgements}
 
-We thank Rena Yang, Allison Vuong, William Forrest, Oleg Mayba, Benjamin Haley, Amy Heidersbach, Kristel Dorighi, Sandra Melo Carlos and Russell Xie, Mike Costa and Scott Martin for providing invaluable feedback and sharing their expertise with us. 
+We thank Benjamin Haley, Mike Costa, Amy Heidersbach, Kristel Dorighi, Scott Martin,Rena Yang, Allison Vuong, Oleg Mayba, Sandra Melo Carlos, and Russell Xie for sharing their expertise with us and guiding the development of our software ecosystem. We also thank William Forrest, Hector Corrada Bravo, Michael Lawrence, and Benjamin Haley for providing invaluable feedback on the manuscript.
 %We also thank the referees for their invaluable input and suggestions. 
 
 
