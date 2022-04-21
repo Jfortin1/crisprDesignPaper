@@ -53,11 +53,15 @@
 
 \title{A comprehensive Bioconductor ecosystem for the design of CRISPR guide RNAs across nucleases and technologies}
 \author[1]{Luke Hoberecht}
-\author[1]{Pirunthan Perampalam}
+\author[2]{Pirunthan Perampalam}
 \author[1]{Aaron Lun}
 \author[1,*]{Jean-Philippe Fortin}
 \affil[1]{Genentech Research and Early Development, Genentech, Inc., 1 DNA Way, South San Francisco, CA, 94080, USA}
+\affil[2]{ProCogia Inc. under contract to Hoffmann-La Roche Limited}
 \date{}
+
+
+
 
 
 
@@ -75,9 +79,8 @@
 The success of CRISPR-mediated gene perturbation studies is highly dependent on the quality of gRNAs, and several tools have been developed to enable optimal gRNA design. 
 However, these tools are not all adaptable to the latest CRISPR modalities or nucleases, nor do they offer comprehensive annotation methods or scalability for advanced CRISPR applications. 
 Here, we present a new ecosystem of R packages that enables efficient gRNA design and annotation for a multitude of CRISPR technologies, including CRISPR knockout, CRISPR activation CRISPR interference and CRISPR base editing. 
-The core package, \textit{crisprDesign}, offers a comprehensive, user-friendly, and unified interface to add on- and off-target annotations via several alignment methods, rich gene and SNP annotations, and a dozen on- and off-target activity scores, including two new methods. 
-These functionalities are enabled for any RNA- or DNA-targeting nucleases, including Cas9, Cas12, and Cas13. 
-We illustrate the general applicability of our tools by designing optimal gRNAs for three case studies: tiling CRISPRbe library for \textit{BRCA1}, tiling CasRx libraries for \textit{CD46} and \textit{CD55}, and promoter CRISPRa library for \textit{MMP7}. 
+The core package, \textit{crisprDesign}, offers a comprehensive, user-friendly, and unified interface to add on- and off-target annotations via several alignment methods, rich gene and SNP annotations, and a dozen on- and off-target activity scores. These functionalities are enabled for any RNA- or DNA-targeting nucleases, including Cas9, Cas12, and Cas13. 
+We illustrate the general applicability of our tools by designing optimal gRNAs for three case studies: tiling CRISPRbe library for \textit{BRCA1} using the base editor BE4max, tiling RNA-targeting libraries for \textit{CD46} and \textit{CD55} using CasRx, and activation of \textit{MMP7} using CRISPRa. 
 Our suite of R packages is open-source and deployed through the Bioconductor project to facilitate their use by the CRISPR community.
 \\
 \\
